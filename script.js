@@ -26,7 +26,13 @@
         cell3.innerHTML = item.runtime;
         cell4.innerHTML = item.year;
         cell5.innerHTML = `<img  id ="boom" src="${item.posterUrl}" >`;
-        cell6.innerHTML = item.actors;
+        cell6.innerHTML = `<ul>
+        <li>s${item.actors[0]}</li>
+        <li>${item.actors[1]}</li>
+        <li>${item.actors[2]}</li>
+        <li>${item.actors[3]}</li>
+
+        </ul>`;
         cell7.innerHTML = item.Festivals;
 
 
@@ -39,4 +45,36 @@
 
   // Send the request
   xhr.send();
-
+// search and filter
+  inputsearch = document.getElementById("input");
+  inputsearch.addEventListener("keyup", function () {
+    let filter, table, row, data, dataValue; // Variables that will be used.
+    filter = inputsearch.value.toUpperCase(); // Store input value in a variable => "ToUppECase".
+    table = document.getElementById("tbody");
+    row = table.getElementsByTagName("tr"); // All table row elements
+    for (i = 0; i < row.length; i++) { // Loop through all rows
+      data = row[i].getElementsByTagName("td")[0]; // Get the first table cell element 
+      if (data) {
+        dataValue = data.innerText; 
+        if (dataValue.toUpperCase().indexOf(filter) > -1) {  // Check if TD innerText index of input value => if false : -1 ; if True : 1 || 0
+          row[i].style.display = ""; // Keep the Row That return : True
+        } else {
+          row[i].style.display = "none"; // hide The Row That return : False
+        }
+      }
+    }
+  });
+  function actorslist(jsonObject){
+    let actors, ul, li, td;
+  td = document.createElement("td");
+  ul = document.createElement("ul");
+  actors = jsonObject["Actors"];
+  for (let j = 0; j < actorslist.length; j++) {
+    li = document.createElement("li");
+    li.setAttribute("id", "li" + j);
+    li.innerHTML = `${actors[j]["first-name"]} ${actors[j]["last-name"]},nationality:${actors[j]["nationality"]}`;
+    ul.appendChild(li);
+  }
+  td.appendChild(ul);
+  return td;
+}
