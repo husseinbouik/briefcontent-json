@@ -34,9 +34,6 @@ xhr.onload = function () {
       cell7.innerHTML = `<ul>
         <li>${item.festivals[0]}</li>
         <li>${item.festivals[1]}</li> 
-        <li>${item.festivals[2]}</li> 
-        <li>${item.festivals[3]}</li> 
-        <li>${item.festivals[4]}</li> 
 
                </ul>`;
     });
@@ -44,7 +41,7 @@ xhr.onload = function () {
 };
 
 // Open the request
-xhr.open("GET", "/movies.json", true);
+xhr.open("GET", "./movies.json", true);
 
 // Send the request
 xhr.send();
