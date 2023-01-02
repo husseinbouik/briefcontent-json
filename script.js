@@ -20,11 +20,11 @@ xhr.onload = function () {
       var cell5 = row.insertCell(4);
       var cell6 = row.insertCell(5);
       var cell7 = row.insertCell(6);
-      cell1.innerHTML = item.Title;
-      cell2.innerHTML = item.Director;
-      cell3.innerHTML = item.Runtime;
-      cell4.innerHTML = item.Year;
-      cell5.innerHTML = `<img width="168px" height="233PX" class ="boom" src="${item.Poster}" >`;
+      cell1.innerHTML = `<img width="168px" height="233PX" class ="boom" src="${item.Poster}" >`;
+      cell2.innerHTML = item.Title;
+      cell3.innerHTML = item.Director;
+      cell4.innerHTML = item.Runtime;
+      cell5.innerHTML = item.Year;
       cell6.innerHTML = `<ul>
         <li>${item.Actors[0]["first-name"]}<br>${item.Actors[0]["last-name"]}<br>${item.Actors[0]["nationality"]}</li>
         <li>${item.Actors[1]["first-name"]}<br>${item.Actors[1]["last-name"]}<br>${item.Actors[1]["nationality"]}</li>
@@ -80,3 +80,18 @@ function listforfestivals(jsonObject) {
   td.appendChild(ul);
   return td;
 }
+$('th.sorted').click(function(){
+  var table = $(this).parents('table').eq(0)
+var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+this.asc = !this.asc
+for (var i = 0; i < rows.length; i++){
+  table.append(rows[i])
+}
+})
+function comparer(index) {
+return function(a, b) {
+    var valA = getCellValue(a, index), valB = getCellValue(b, index)
+    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+}
+}
+function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
