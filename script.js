@@ -1,97 +1,208 @@
-// Create a new XMLHttpRequest object
-var xhr = new XMLHttpRequest();
+// on a affecter l url du fichier json a une variable 
+let jsonpath = '/movies.json'
+//  Create an XMLHttpRequest object
+ var request = new XMLHttpRequest();
+ 
+// open the request and  get data from fichier json 
+ request.open('GET', jsonpath);
+//  chose type of response  that we gone a receive 
+ request.responseType = 'Json';
+ request.send();
+  
 
-// Set the callback function
-xhr.onload = function () {
-  if (xhr.status === 200) {
-    // Parse the JSON data
-    var data = JSON.parse(xhr.responseText);
-
-    // Get the table element
-    var table = document.getElementById("tbody");
-
-    // Iterate over the data and append a row to the table for each item
-    data.forEach(function (item) {
-      var row = table.insertRow();
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
-      var cell5 = row.insertCell(4);
-      var cell6 = row.insertCell(5);
-      var cell7 = row.insertCell(6);
-      cell1.innerHTML = `<img width="168px" height="233PX" class ="boom" src="${item.Poster}" >`;
-      cell2.innerHTML = item.Title;
-      cell3.innerHTML = item.Director;
-      cell4.innerHTML = item.Runtime;
-      cell5.innerHTML = item.Year;
-      cell6.innerHTML = `<ul>
-        <li>${item.Actors[0]["first-name"]}<br>${item.Actors[0]["last-name"]}<br>${item.Actors[0]["nationality"]}</li>
-        <li>${item.Actors[1]["first-name"]}<br>${item.Actors[1]["last-name"]}<br>${item.Actors[1]["nationality"]}</li>
-        <li>${item.Actors[2]["first-name"]}<br>${item.Actors[2]["last-name"]}<br>${item.Actors[2]["nationality"]}</li>
-
-        </ul>`;
-      cell7.innerHTML = `<ul>
-        <li>${item.festivals[0]}</li>
-        <li>${item.festivals[1]}</li> 
-
-               </ul>`;
-    });
-  }
+//   on va creer une variable pour stocker the data that we received 
+request.onload = function() {
+var data = JSON.parse(request.response);
+console.log(data);
+// loop in the variable and call a function to help creat  rows for chaque elementin the respons 
+ for(var i = 0; i < data.length; i++) {
+    creatrow(data[i]);
+}
 };
 
-// Open the request
-xhr.open("GET", "./movies.json", true);
+let table = document.getElementById("tbody");
+let id = 0;
+function creatrow(Json) {
+  id++;
+  let tr = document.createElement("tr");
+  tr.setAttribute("id", "tr" + id);
+  tr.innerHTML = `<td>${Json["Title"]}</td>
+    <td>${Json["Director"]}</td>
+    <td>${parseInt(Json["Runtime"])}</td>
+    <td>${Json["Year"]}</td>
+    <td><img src=${Json["Poster"]}" class="img-thumbnail"alt="movie poster" width="100px" height="100px"></td>`;
+  tr.appendChild(listforfestivals(Json));
+  tr.appendChild(actorslist(Json));
+  table.appendChild(tr);
 
-// Send the request
-xhr.send();
-// search and filter
-inputsearch = document.getElementById("input");
-inputsearch.addEventListener("keyup", function () {
-  let filter, table, row, data, dataValue; // Variables that will be used.
-  filter = inputsearch.value.toUpperCase(); // Store input value in a variable => "ToUppECase".
-  table = document.getElementById("tbody");
-  row = table.getElementsByTagName("tr"); // All table row elements
-  for (i = 0; i < row.length; i++) {
-    // Loop through all rows
-    data = row[i].getElementsByTagName("td")[0]; // Get the first table cell element
-    if (data) {
-      dataValue = data.innerText;
-      if (dataValue.toUpperCase().indexOf(filter) > -1) {
-        // Check if TD innerText index of input value => if false : -1 ; if True : 1 || 0
-        row[i].style.display = ""; // Keep the Row That return : True
-      } else {
-        row[i].style.display = "none"; // hide The Row That return : False
-      }
-    }
-  }
-});
-function listforfestivals(jsonObject) {
-  let festivals, ul, li, td;
-  festivals = jsonObject["festivals"];
+
+}
+
+function actorslist(jsonObject){
+    let actors, ul, li, td;
   td = document.createElement("td");
   ul = document.createElement("ul");
-  for (let j = 0; j < festivals.length; j++) {
+
+  actors = jsonObject["Actors"];
+  for (let j = 0; j < actorslist.length; j++) {
     li = document.createElement("li");
     li.setAttribute("id", "li" + j);
-    li.innerHTML = festivals[j];
+    li.innerHTML = `${actors[j]["first-name"]} ${actors[j]["last-name"]},nationality:${actors[j]["nationality"]}`;
     ul.appendChild(li);
   }
   td.appendChild(ul);
   return td;
 }
-$('th.sorted').click(function(){
-  var table = $(this).parents('table').eq(0)
-var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-this.asc = !this.asc
-for (var i = 0; i < rows.length; i++){
-  table.append(rows[i])
+
+
+function listforfestivals(jsonObject) {
+    let festivals, ul, li, td;
+    festivals = jsonObject["festivals"];
+    td = document.createElement("td");
+    ul = document.createElement("ul");
+  
+    for (let j = 0; j < festivals.length; j++) {
+      li = document.createElement("li");
+      li.setAttribute("id", "li" + j);
+      li.innerHTML = festivals[j];
+      ul.appendChild(li);
+    }
+    td.appendChild(ul);
+    return td;
+  }
+
+  function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("table");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}    
+
+function sortnum(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("table");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = parseInt(rows[i].getElementsByTagName("TD")[n].innerHTML);
+      y = parseInt(rows[i + 1].getElementsByTagName("TD")[n].innerHTML);
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x > y) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
 }
-})
-function comparer(index) {
-return function(a, b) {
-    var valA = getCellValue(a, index), valB = getCellValue(b, index)
-    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-}
-}
-function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+  
+  
+  function searchTable(){
+
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("inputsearche");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("table");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  
+// `<img width="168px" height="233PX" class ="boom" src="${item.Poster}" >`

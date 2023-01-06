@@ -22,39 +22,38 @@
   </head>
   <body>
     <main>
-      <nav class="navbar">
-        <a class="navbar">Movies</a>
+      <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand">Movies</a>
       </nav>
       <div class="bg">
-        <img
-          class="concord-img vlv-creative"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/84526d58-475e-4e6f-9c81-d2d78ddce803/e156e346-e781-4f1f-b71f-56c71dc73b18/MA-en-20221228-popsignuptwoweeks-perspective_alpha_website_small.jpg"
+        <div class="card-img">
+          <img class="card-img-top" src="https://assets.nflxext.com/ffe/siteui/vlv3/84526d58-475e-4e6f-9c81-d2d78ddce803/e156e346-e781-4f1f-b71f-56c71dc73b18/MA-en-20221228-popsignuptwoweeks-perspective_alpha_website_small.jpg"
           srcset="
             https://assets.nflxext.com/ffe/siteui/vlv3/84526d58-475e-4e6f-9c81-d2d78ddce803/e156e346-e781-4f1f-b71f-56c71dc73b18/MA-en-20221228-popsignuptwoweeks-perspective_alpha_website_small.jpg  1000w,
             https://assets.nflxext.com/ffe/siteui/vlv3/84526d58-475e-4e6f-9c81-d2d78ddce803/e156e346-e781-4f1f-b71f-56c71dc73b18/MA-en-20221228-popsignuptwoweeks-perspective_alpha_website_medium.jpg 1500w,
             https://assets.nflxext.com/ffe/siteui/vlv3/84526d58-475e-4e6f-9c81-d2d78ddce803/e156e346-e781-4f1f-b71f-56c71dc73b18/MA-en-20221228-popsignuptwoweeks-perspective_alpha_website_large.jpg  1800w
           "
-          alt=""
-        />
-        
-        <div  class="input-group-sm"> 
-          <input type="search"  id="inputsearche" class="form-control rounded-bottom-5 d-grid" placeholder="Search by Title" aria-label="Search" aria-describedby="search-addon" id="search" onkeyup="searchTable()">
-        </div>
-        
+ alt="">              
+              
+                <input type="search"  id="inputsearche" class="form-control  d-grid position-absolute w-50 top-500" placeholder="Search by Title" aria-label="Search" aria-describedby="search-addon"    onkeyup="searchTable()">
+          </div>
+      
+      
       </div>
-      <table class="table table-dark table-borderless">
+      <table class="table table-dark table-borderless" id="table">
         <thead>
           <tr>
-            <th >Poster</th>
-            <th data-column="Titre" data-order="desc" class="sorted" >Title &#9650</th>
-            <th data-column="Titre" data-order="desc" class="sorted" >Director &#9650</th>
-            <th data-column="Titre" data-order="desc" class="sorted" >Runtime &#9650</th>
-            <th data-column="Titre" data-order="desc" class="sorted" >Year &#9650</th>
-            <th  >Actors</th>
-            <th  >Festivals</th>
+              <th role="button" onclick="sortTable(0)">Title </th>
+              <th onclick="sortTable(1)" >Director</th>
+              <th onclick="sortnum(2)">Duration by minutes</th>
+              <th onclick="sortnum(3)">Production year</th>
+              <th >Poster</th>
+              <th >Festivals </th>
+              <th >Actors</th>
           </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
+      </thead>
+      <tbody id="tbody">
+      </tbody>
       </table>
     </main>
     <script src="script.js"></script>
