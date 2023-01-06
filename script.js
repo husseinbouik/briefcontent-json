@@ -1,5 +1,5 @@
 // on a affecter l url du fichier json a une variable 
-let jsonpath = '/movies.json'
+let jsonpath = './movies.json'
 //  Create an XMLHttpRequest object
  var request = new XMLHttpRequest();
  
